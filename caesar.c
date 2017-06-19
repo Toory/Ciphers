@@ -16,11 +16,14 @@ void Caesar(char *str,int shift,int choose){
 			for(j=0;j<ALPHA && flag != 1;j++){
 				/*if choose = 0 -> encrypting*/
 				if(choose == 0){
-					/*if the correct match between the string to encrypt and the alphabet string is found*/ 
+					/*if the correct match between the string to encrypt 
+					  and the alphabet string is found*/ 
 					if(str[i] == alphabet[j]){
-						/*apply the shift given by the user, find the new letter and re-assign str[i] to the shifted letter*/
+						/*apply the shift given by the user, find the new letter 
+						  and re-assign str[i] to the shifted letter*/
 						str[i] = alphabet[(j+shift)%ALPHA];
-						/*Setting flag=1 to prevent the for loop from further entering, the outer for loop will then go on the next letter of the string to encrypt */
+						/*Setting flag=1 to prevent the for loop from further entering, 
+						  the outer for loop will then go on the next letter of the string to encrypt */
 						flag = 1;
 					}
 				}
@@ -30,8 +33,9 @@ void Caesar(char *str,int shift,int choose){
 						temp_shift = (j-shift) % ALPHA;
 						if(temp_shift < 0)    
 							temp_shift += ALPHA;
-							/*  In C '%' it's it's the remainder operator (not the modulus which is required in this case)
-							so sanitizing negative cases is needed.	*/
+							/*  In C '%' it's the remainder operator 
+							    (not the modulus which is required in this case)
+							     so sanitizing negative cases is needed.*/
 						str[i] = alphabet[temp_shift];
 						flag = 1;
 					}
