@@ -8,7 +8,7 @@ The Caesar cipher, also known as a shift cipher, is one of the simplest forms of
 
 ## Dependencies
 
-  [gcc](https://gcc.gnu.org/) - Requires the GNU Compiler Collection for compiling.
+  [gcc](https://gcc.gnu.org/) - Requires the GNU Compiler Collection to compile.
   
 ## Installation
   
