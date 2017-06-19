@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+#include "caesar.h"
 
 #define N 10000 /*Fixed length for I/O*/
 #define ALPHA 26 /*Alphabet length*/
