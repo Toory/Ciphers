@@ -17,7 +17,7 @@ The Caesar cipher, also known as a shift cipher, is one of the simplest forms of
   	cd ~/caesar-cipher
    	make
    	chmod +x caesar
-	./caesar
+    ./caesar <shift> [-e | -d]  [-i] <input_file> [-o] <output_file>
   
   
 
