@@ -27,10 +27,11 @@ The Caesar cipher, also known as a shift cipher, is one of the simplest forms of
  ## Installation
  
    Write the text you want to encrypt/decrypt in a text file (in.dat)
-    cd ~/vigenere-cipher
-   	make
-   	chmod +x vigenere
-    ./vigenere <keyword> [-e | -d]  [-i] <input_file> [-o] <output_file>
+   
+      cd ~/vigenere-cipher
+   	  make
+   	  chmod +x vigenere
+      ./vigenere <keyword> [-e | -d]  [-i] <input_file> [-o] <output_file>
    
   
   
