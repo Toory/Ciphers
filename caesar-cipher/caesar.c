@@ -1,8 +1,5 @@
 #include "caesar.h"
 
-#define N 10000 /*Fixed length for I/O*/
-#define ALPHA 26 /*Alphabet length*/
-
 void decrypt(char *str,int shift){
 
 	int i,j,flag,temp_shift;
@@ -58,6 +55,28 @@ void encrypt(char *str,int shift){
 	return;
 }
 
+void BruteForce(char *str){
+	int i,j;
+	char *text = strdup(str);
+
+	for(i=0;i<ALPHA;i++){
+		decrypt(text,i+1);
+		for(j=0;j<strlen(text);j++){ 
+			/*works on the assumption that in the english language 
+			  the most common trigram is 'the'*/
+			if (text[j] == 't' && text[j+1] == 'h' && text[j+2] == 'e'){
+				printf("shift = %d \n%s\n", i+1,text);
+				break;
+			}
+			/*in case of wrong output it's possible to
+			  comment the if to print all 26 possibilities*/
+		}
+		text = strdup(str);
+	}
+
+	return;
+}
+
 char *OpenFromFile(char *fileIn){
 	
 	int i,fin;
@@ -84,8 +103,8 @@ char *OpenFromFile(char *fileIn){
 void WriteToFile(char *text, char *fileOut){
 
 	int fout;
-	/*open output file in write mode and if it doesn't exist it will be created
-	   S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH modes are the write and read permissions */
+	/*open output file in write mode and if it doesn't exit it will be created
+	   S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH stand for write and read permission */
 	mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 	fout = open(fileOut,O_WRONLY | O_CREAT | O_TRUNC, mode);
 	if (fout == -1){
@@ -101,13 +120,14 @@ void WriteToFile(char *text, char *fileOut){
 
 void Usage(){
 	printf("Usage: caesar <shift> [-e | -d]  [-i] <input_file> [-o] <output_file>\n");
+	printf("Usage without known shift: caesar [-f]  [-i] <input_file> [-o] <output_file>\n");
 	return;
 }
 
 int main(int argc, char **argv){
 	char *text;
 
-	if (argc != 7){
+	if (argc != 7 && argc != 6 ){
 		Usage();
 		exit(0);
 	}
@@ -115,10 +135,12 @@ int main(int argc, char **argv){
 			
 		text = OpenFromFile(argv[4]);
 
+		/*encrypt*/
 		if (strcmp(argv[2],"-e") == 0){
 			encrypt(text,atoi(argv[1]));
 
 		}
+		/*decrypt*/
 		else if (strcmp(argv[2],"-d") == 0){
 			decrypt(text,atoi(argv[1]));
 		}
@@ -128,6 +150,12 @@ int main(int argc, char **argv){
 		}
 
 		WriteToFile(text,argv[6]);
+	}
+	/*bruteforce*/
+	else if(strcmp(argv[1],"-b") == 0){
+
+		text = OpenFromFile(argv[3]);
+		BruteForce(text);
 	}
 	else{
 		Usage();
