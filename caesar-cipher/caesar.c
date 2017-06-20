@@ -120,7 +120,7 @@ void WriteToFile(char *text, char *fileOut){
 
 void Usage(){
 	printf("Usage: caesar <shift> [-e | -d]  [-i] <input_file> [-o] <output_file>\n");
-	printf("Usage without known shift: caesar [-f]  [-i] <input_file> [-o] <output_file>\n");
+	printf("Usage without known shift: caesar [-b]  [-i] <input_file> [-o] <output_file>\n");
 	return;
 }
 
