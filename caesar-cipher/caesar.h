@@ -9,9 +9,13 @@
 #include <fcntl.h>
 #include <ctype.h>
 
+#define N 10000 
+#define ALPHA 26 /*Alphabet length*/
+
 void decrypt(char *,int);
 void encrypt(char *,int);
 char *OpenFromFile(char *);
 void WriteToFile(char *, char *);
+void BruteForce(char *);
 
 #endif
