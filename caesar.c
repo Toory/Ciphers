@@ -100,14 +100,14 @@ void WriteToFile(char *text, char *fileOut){
 }
 
 void Usage(){
-	printf("Usage i/o from file: caesar <shift> [-e | -d]  [-i] <input_file> [-o] <output_file>\n");
+	printf("Usage: caesar <shift> [-e | -d]  [-i] <input_file> [-o] <output_file>\n");
 	return;
 }
 
 int main(int argc, char **argv){
 	char *text;
 
-	if (argc > 7){
+	if (argc != 7){
 		Usage();
 		exit(0);
 	}
