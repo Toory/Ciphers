@@ -3,18 +3,45 @@
 #define N 10000 /*Fixed length for I/O*/
 #define ALPHA 26 /*Alphabet length*/
 
-void Caesar(char *str,int shift,int choose){
+void decrypt(char *str,int shift){
+
 	int i,j,flag,temp_shift;
 	char *alphabet = "abcdefghijklmnopqrstuvwxyz";
 	for(i=0;i<strlen(str);i++){
-		if(str[i] == ' ')
-				printf(" ");
+		if(str[i] == ' '){
+			/*when a space in encountered skip*/
+		}
 		else{
 			for(j=0;j<ALPHA && flag != 1;j++){
-				/*if choose = 0 -> encrypting*/
-				if(choose == 0){
-					/*if the correct match between the string to encrypt 
-					  and the alphabet string is found*/ 
+				if(str[i] == alphabet[j]){
+					temp_shift = (j-shift) % ALPHA;
+					if(temp_shift < 0)    
+						temp_shift += ALPHA;
+						/*  In C '%' it's it's the remainder operator 
+						    (not the modulus which is required in this case)
+						    so sanitizing negative cases is needed.*/
+					str[i] = alphabet[temp_shift];
+					flag = 1;
+				}
+			}
+			flag=0;
+		}
+	}
+
+	return;
+}
+
+void encrypt(char *str,int shift){
+
+	int i,j,flag;
+	char *alphabet = "abcdefghijklmnopqrstuvwxyz";
+	for(i=0;i<strlen(str);i++){
+		if(str[i] == ' '){
+			/*when a space in encountered skip*/
+		}
+		else{
+			for(j=0;j<ALPHA && flag != 1;j++){
+					/*if the correct match between the string to encrypt and the alphabet string is found*/ 
 					if(str[i] == alphabet[j]){
 						/*apply the shift given by the user, find the new letter 
 						  and re-assign str[i] to the shifted letter*/
@@ -23,110 +50,89 @@ void Caesar(char *str,int shift,int choose){
 						  the outer for loop will then go on the next letter of the string to encrypt */
 						flag = 1;
 					}
-				}
-				/*if choose = 1 -> decrypting*/
-				else{ 
-					if(str[i] == alphabet[j]){
-						temp_shift = (j-shift) % ALPHA;
-						if(temp_shift < 0)    
-							temp_shift += ALPHA;
-							/*  In C '%' it's the remainder operator 
-							    (not the modulus which is required in this case)
-							     so sanitizing negative cases is needed.*/
-						str[i] = alphabet[temp_shift];
-						flag = 1;
-					}
-				}
 			}
 			flag=0;
 		}
 	}
+
+	return;
 }
 
-void crypt(int choose,char *filename){
-	FILE *fp,*fout;
-	int shift,i;
-	char *str;
-	str = malloc(N * sizeof(char));
-
-	if((fp = fopen(filename,"r")) == NULL){
-		printf("File not found\n");
-		exit(EXIT_FAILURE);
-	}
-
-	/*Encrypt*/
-	if(choose == 0){
-		if((fout = fopen("encrypted.dat","w")) == NULL){
-			printf("File not found\n");
-			exit(EXIT_FAILURE);
-		}
-	}
-	/*Decrypt*/
-	else{
-		if((fout = fopen("decrypted.dat","w")) == NULL){
-			printf("File not found\n");
-			exit(EXIT_FAILURE);
-		}
-	}
-
-	printf("Input shift to apply: ");
-	scanf("%d", &shift);
+char *OpenFromFile(char *fileIn){
 	
-	while(fscanf(fp,"%s",str) != EOF){
-		for(i = 0; i<strlen(str); i++)
-			/*converts the whole string to lowercase*/
-			str[i] = tolower(str[i]);
-		/* choose = 0 -> encrypting
-		   choose = 1 -> decrypting */
-		Caesar(str,shift,choose);
-		printf("%s ", str);
-		fprintf(fout,"%s ",str);
-	}
-	printf("\n");
-	fprintf(fout,"\n");
+	int i,fin;
+	char *text;
+	text = malloc(N * sizeof(char));
 
-	fclose(fp);
-	fclose(fout);
+	fin = open(fileIn,O_RDONLY);
+	if (fin == -1){
+		fprintf(stderr, "Error opening %s\n", fileIn);
+		exit(0);
+	}
+	/*read entire file and put it in text*/
+	read(fin,text,N);
+	
+	for(i=0;i<strlen(text);i++){
+		/*converts the whole string to lowercase*/
+		text[i] = tolower(text[i]);
+	}
+
+	close(fin);
+	return text;
+}
+
+void WriteToFile(char *text, char *fileOut){
+
+	int fout;
+	/*open output file in write mode and if it doesn't exit it will be created
+	   S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH stand for write and read permission */
+	mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+	fout = open(fileOut,O_WRONLY | O_CREAT | O_TRUNC, mode);
+	if (fout == -1){
+		fprintf(stderr, "Error opening %s\n", fileOut);
+		exit(0);
+	}
+	printf("%s\n", text);
+	write(fout,text,strlen(text));
+
+	close(fout);
+	return;
+}
+
+void Usage(){
+	printf("Usage i/o from file: caesar <shift> [-e | -d]  [-i] <input_file> [-o] <output_file>\n");
 	return;
 }
 
 int main(int argc, char **argv){
-	int choose;
-	char *filename;
-	filename = malloc(N * sizeof(int));
+	char *text;
 
-	do{
-		printf("------------------------------------\n");
-		printf("-----------Caesar Cipher------------\n");
-		printf("------------------------------------\n");
-		printf("1. Encrypt text from file.\n");
-		printf("2. Decrypt text from file.\n");
-		printf("3. Exit.\n");
-		printf(">> ");
-		scanf("%d",&choose);
-		switch(choose){
+	if (argc > 7){
+		Usage();
+		exit(0);
+	}
+	else if(strcmp(argv[3],"-i") == 0 && strcmp(argv[5],"-o") == 0){
+			
+		text = OpenFromFile(argv[4]);
 
-			case 1:
-				printf("Input filename: \n");
-				scanf("%s",filename);
-				crypt(0,filename);
-				break;
+		if (strcmp(argv[2],"-e") == 0){
+			encrypt(text,atoi(argv[1]));
 
-			case 2:
-				printf("Input filename: \n");
-				scanf("%s",filename);
-				crypt(1,filename);
-				break;
-
-			case 3:
-				choose = 0;
-				break;
-
-			default:
-				printf("Choose a valid option.\n");
-				break;
 		}
-	}while(choose != 0);
-	
+		else if (strcmp(argv[2],"-d") == 0){
+			decrypt(text,atoi(argv[1]));
+		}
+		else{
+			Usage();
+			exit(0);
+		}
+
+		WriteToFile(text,argv[6]);
+	}
+	else{
+		Usage();
+		exit(0);
+	}
+
 	return 0;
 }
