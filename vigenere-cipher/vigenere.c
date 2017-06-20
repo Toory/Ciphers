@@ -48,7 +48,6 @@ void GetShifts(int *shift,char *keyword){
 		for(j=0;j<ALPHA;j++){
 			if (keyword[i] == alphabet[j]){
 				shift[i] = j;
-				printf("shift[%d] = %d\n",i,shift[i]);
 			} 
 		}
 	}
