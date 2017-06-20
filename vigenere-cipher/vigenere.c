@@ -6,16 +6,11 @@ void Encrypt(char *str,int shift){
 
 	int j;
 
-	if(*str == ' '){
-		/*when a space in encountered skip*/
-	}
-	else{
-		for(j=0;j<ALPHA;j++){
-			if(*str == alphabet[j]){
-				//printf("str = %c alphabet[%d] = %c - %d ",str,j,alphabet[j],((j+shift)%ALPHA));
-				*str = alphabet[(j+shift)%ALPHA];
-				break;
-			}
+	for(j=0;j<ALPHA;j++){
+		if(*str == alphabet[j]){
+			//printf("str = %c alphabet[%d] = %c - %d ",str,j,alphabet[j],((j+shift)%ALPHA));
+			*str = alphabet[(j+shift)%ALPHA];
+			break;
 		}
 	}
 	return;
@@ -53,6 +48,7 @@ void GetShifts(int *shift,char *keyword){
 		for(j=0;j<ALPHA;j++){
 			if (keyword[i] == alphabet[j]){
 				shift[i] = j;
+				printf("shift[%d] = %d\n",i,shift[i]);
 			} 
 		}
 	}
@@ -71,14 +67,19 @@ void Vigenere(char *text,char *keyword,char *choose){
 	for(i=0,j=0;i<strlen(text);i++,j++){
 		/*c = text[i] is passed by reference in the encrypt/decrypt fuction*/
 		c = text[i];
+		
 		if((strcmp(choose,"-e") == 0))
 			Encrypt(&c,shifts[j]);
 		else
 			Decrypt(&c,shifts[j]);
-		if(j+1 == strlen(keyword)){
-			j=-1;
-		}
+
 		text[i] = c;
+		if(c == ' ' || (ispunct(c)) != 0 || c == '\n')
+			j--;
+		else if(j+1 == strlen(keyword))
+			j=-1;
+		else
+			continue;
 	}
 
 	printf("%s\n",text);
