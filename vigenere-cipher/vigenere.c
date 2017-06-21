@@ -3,41 +3,34 @@
 static char *alphabet = "abcdefghijklmnopqrstuvwxyz";
 
 void Encrypt(char *str,int shift){
-
 	int j;
 
 	for(j=0;j<ALPHA;j++){
 		if(*str == alphabet[j]){
-			//printf("str = %c alphabet[%d] = %c - %d ",str,j,alphabet[j],((j+shift)%ALPHA));
 			*str = alphabet[(j+shift)%ALPHA];
 			break;
 		}
 	}
+
 	return;
 }
 
 void Decrypt(char *str,int shift){
-
 	int j,temp_shift;
 
-	if(*str == ' '){
-		/*when a space in encountered skip*/
-	}
-	else{
-		for(j=0;j<ALPHA;j++){
-			if(*str == alphabet[j]){
-				temp_shift = (j-shift) % ALPHA;
-				if(temp_shift < 0)    
-					temp_shift += ALPHA;
-					/*  In C '%' it's it's the remainder operator 
-					    (not the modulus which is required in this case)
-					    so sanitizing negative cases is needed.*/
-				*str = alphabet[temp_shift];
-				break;
-			}
+	for(j=0;j<ALPHA;j++){
+		if(*str == alphabet[j]){
+			temp_shift = (j-shift) % ALPHA;
+			if(temp_shift < 0)    
+				temp_shift += ALPHA;
+				/*  In C '%' it's it's the remainder operator 
+				    (not the modulus which is required in this case)
+				    so sanitizing negative cases is needed.*/
+			*str = alphabet[temp_shift];
+			break;
 		}
 	}
-
+	
 	return;
 }
 
@@ -48,6 +41,7 @@ void GetShifts(int *shift,char *keyword){
 		for(j=0;j<ALPHA;j++){
 			if (keyword[i] == alphabet[j]){
 				shift[i] = j;
+				printf("shift[%d] = %d\n",i,shift[i]);
 			} 
 		}
 	}
