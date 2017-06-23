@@ -12,7 +12,7 @@ void Decrypt(char *text,int shift){
 		}
 		else{
 			text[i] = tolower(text[i]);
-			x = (text[i] - 'a' - shift) % 26;
+			x = (text[i] - 'a' - shift) % ALPHA;
 			if (x < 0)
 				x += ALPHA;
 			text[i] = alphabet[x];
@@ -30,7 +30,7 @@ void Encrypt(char *text,int shift){
 		}
 		else{
 			text[i] = tolower(text[i]);
-			x = (text[i] - 'a' + shift) % 26;
+			x = (text[i] - 'a' + shift) % ALPHA;
 			if (x < 0)
 				x += ALPHA;
 			text[i] = alphabet[x];
