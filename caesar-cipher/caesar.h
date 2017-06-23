@@ -12,8 +12,8 @@
 #define N 10000 
 #define ALPHA 26 /*Alphabet length*/
 
-void decrypt(char *,int);
-void encrypt(char *,int);
+void Decrypt(char *,int);
+void Encrypt(char *,int);
 char *OpenFromFile(char *);
 void WriteToFile(char *, char *);
 void BruteForce(char *);
