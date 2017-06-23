@@ -5,8 +5,8 @@ void decrypt(char *str,int shift){
 	int i,j,flag,temp_shift;
 	char *alphabet = "abcdefghijklmnopqrstuvwxyz";
 	for(i=0;i<strlen(str);i++){
-		if(str[i] == ' '){
-			/*when a space in encountered skip*/
+		if(isspace(str[i]) != 0 || ispunct(str[i]) != 0 || str[i]== '\n'){
+			/*when a space, punctuation character or new line is encountered skip*/
 		}
 		else{
 			for(j=0;j<ALPHA && flag != 1;j++){
@@ -33,8 +33,8 @@ void encrypt(char *str,int shift){
 	int i,j,flag;
 	char *alphabet = "abcdefghijklmnopqrstuvwxyz";
 	for(i=0;i<strlen(str);i++){
-		if(str[i] == ' '){
-			/*when a space in encountered skip*/
+		if(isspace(str[i]) != 0 || ispunct(str[i]) != 0 || str[i]== '\n'){
+			/*when a space, punctuation character or new line is encountered skip*/
 		}
 		else{
 			for(j=0;j<ALPHA && flag != 1;j++){
@@ -103,8 +103,8 @@ char *OpenFromFile(char *fileIn){
 void WriteToFile(char *text, char *fileOut){
 
 	int fout;
-	/*open output file in write mode and if it doesn't exit it will be created
-	   S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH stand for write and read permission */
+	/*open output file in write mode and if it doesn't exist it will be created
+	   S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH are the write and read permissions */
 	mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 	fout = open(fileOut,O_WRONLY | O_CREAT | O_TRUNC, mode);
 	if (fout == -1){
