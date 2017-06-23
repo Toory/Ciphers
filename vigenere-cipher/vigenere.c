@@ -55,8 +55,10 @@ void Vigenere(char *text,char *keyword,char *choose){
 
 	shifts = malloc(strlen(keyword) * sizeof(int));
 
+	/*get the different shifts in an array of integers*/
 	GetShifts(shifts,keyword);
 
+	/*loop repeats for the length of the text,and the j index is resetted once every strlen(keyword)*/
 	for(i=0,j=0;i<strlen(text);i++,j++){
 		/*c = text[i] is passed by reference in the encrypt/decrypt fuction*/
 		c = text[i];
@@ -67,7 +69,9 @@ void Vigenere(char *text,char *keyword,char *choose){
 			Decrypt(&c,shifts[j]);
 
 		text[i] = c;
-		if(c == ' ' || (ispunct(c)) != 0 || c == '\n')
+		if(isspace(c) != 0 || (ispunct(c)) != 0 || c == '\n')
+			/*when a space, punctuation character or new line is encountered skip
+			  and decrease j since the shift it's not used*/
 			j--;
 		else if(j+1 == strlen(keyword))
 			j=-1;
@@ -83,8 +87,8 @@ void Vigenere(char *text,char *keyword,char *choose){
 void WriteToFile(char *text, char *fileOut){
 
 	int fout;
-	/*open output file in write mode and if it doesn't exit it will be created
-	   S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH stand for write and read permission */
+	/*open output file in write mode and if it doesn't exist it will be created.
+	   S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH are the write and read permissions */
 	mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 	fout = open(fileOut,O_WRONLY | O_CREAT | O_TRUNC, mode);
 	if (fout == -1){
