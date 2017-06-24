@@ -14,8 +14,8 @@ void Decrypt(char *text,int shift){
 	int i,x;
 	
 	for(i=0;i<strlen(text);i++){
-		if(isspace(text[i]) != 0 || ispunct(text[i]) != 0 || text[i] == '\n'){
-			/*when a space, punctuation character or new line is encountered skip*/
+		if(isalpha(text[i]) == 0){
+			/*if text[i] is not in the alphabet skip*/
 		}
 		else{
 			text[i] = tolower(text[i]);
@@ -32,8 +32,8 @@ void Encrypt(char *text,int shift){
 	int i,x;
 
 	for(i=0;i<strlen(text);i++){
-		if(isspace(text[i]) != 0 || ispunct(text[i]) != 0 || text[i] == '\n'){
-			/*when a space, punctuation character or new line is encountered skip*/
+		if(isalpha(text[i]) == 0){
+			/*if text[i] is not in the alphabet skip*/
 		}
 		else{
 			text[i] = tolower(text[i]);
@@ -103,7 +103,7 @@ int main(int argc, char **argv){
 	else if(strcmp(argv[3],"-i") == 0 && strcmp(argv[5],"-o") == 0){
 
 		text = OpenFromFile(argv[4]);
-		printf("%s\n", text);
+
 		/*encrypt*/
 		if (strcmp(argv[2],"-e") == 0){
 			Encrypt(text,atoi(argv[1]));
