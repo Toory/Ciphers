@@ -13,7 +13,6 @@ The Caesar cipher, also known as a shift cipher, is one of the simplest forms of
   
   	cd ~/caesar-cipher
    	make
-   	chmod +x caesar
     ./caesar <shift> [-e | -d]  [-i] <input_file> [-o] <output_file>
     if the shift value it's not known you can try to decrypt the text by using the BruteForce function, as follows:
     ./caesar <shift> [-b]  [-i] <input_file> [-o] <output_file>
@@ -30,7 +29,6 @@ The Caesar cipher, also known as a shift cipher, is one of the simplest forms of
    
       cd ~/vigenere-cipher
    	  make
-   	  chmod +x vigenere
       ./vigenere <keyword> [-e | -d]  [-i] <input_file> [-o] <output_file>
    
   
