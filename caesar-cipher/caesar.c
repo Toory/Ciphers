@@ -1,4 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 #include "caesar.h"
+
+#define N 10000 
+#define ALPHA 26 /*Alphabet length*/
 
 static char *alphabet = "abcdefghijklmnopqrstuvwxyz";
 
@@ -42,11 +49,9 @@ void BruteForce(char *str) {
 	int i;
 	char *text = strdup(str);
 
-	printf("Original - %s\n", text);
 	for (i=0;i<ALPHA;i++) {
-        Decrypt(text,i+1); /*Shifts it by one every time*/
+        Decrypt(text,1); /*Shifts it by one every time*/
         printf("----\nshift = %d\n%s\n", i+1,text);
-        text = strdup(str);
     }
     free(text);
 }
@@ -86,7 +91,6 @@ void WriteToFile(char *text, char *fileOut){
 static void Usage(){
 	printf("Usage: caesar <shift> [-e | -d]  [-i] <input_file> [-o] <output_file>\n");
 	printf("Usage without known shift: caesar [-b]  [-i] <input_file> [-o] <output_file>\n");
-	return;
 }
 
 int main(int argc, char **argv){
