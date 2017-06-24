@@ -1,128 +1,104 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 #include "vigenere.h"
+
+#define N 10000
+#define ALPHA 26 /*Alphabet length*/
 
 static char *alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-void Encrypt(char *str,int shift){
-	int j;
+void Encrypt(char *text,int shift){
+	int x;
 
-	for(j=0;j<ALPHA;j++){
-		if(*str == alphabet[j]){
-			*str = alphabet[(j+shift)%ALPHA];
-			break;
-		}
-	}
-
-	return;
+	*text = tolower(*text);
+	x = (*text - 'a' + shift) % 26;
+	if (x < 0)
+		x += ALPHA;
+	*text = alphabet[x];
 }
 
-void Decrypt(char *str,int shift){
-	int j,temp_shift;
+void Decrypt(char *text,int shift){
+	int x;
 
-	for(j=0;j<ALPHA;j++){
-		if(*str == alphabet[j]){
-			temp_shift = (j-shift) % ALPHA;
-			if(temp_shift < 0)    
-				temp_shift += ALPHA;
-				/*  In C '%' it's it's the remainder operator 
-				    (not the modulus which is required in this case)
-				    so sanitizing negative cases is needed.*/
-			*str = alphabet[temp_shift];
-			break;
-		}
-	}
-	
-	return;
+	*text = tolower(*text);
+	x = (*text - 'a' - shift) % 26;
+	if (x < 0)
+		x += ALPHA;
+	*text = alphabet[x];
 }
 
 void GetShifts(int *shift,char *keyword){
-	int i,j;
+	int i;
 
 	for(i=0;i<strlen(keyword);i++){
-		for(j=0;j<ALPHA;j++){
-			if (keyword[i] == alphabet[j]){
-				shift[i] = j;
-				printf("shift[%d] = %d\n",i,shift[i]);
-			} 
-		}
+		shift[i] = (keyword[i] - 'a') % 26;
 	}
-
-	return;
 }
 
 void Vigenere(char *text,char *keyword,char *choose){
 	int *shifts,i,j;
-	char c;
 
 	shifts = malloc(strlen(keyword) * sizeof(int));
 
 	/*get the different shifts in an array of integers*/
 	GetShifts(shifts,keyword);
 
-	/*loop repeats for the length of the text,and the j index is resetted once every strlen(keyword)*/
+	/*loop repeats for the length of the text*/
 	for(i=0,j=0;i<strlen(text);i++,j++){
-		/*c = text[i] is passed by reference in the encrypt/decrypt fuction*/
-		c = text[i];
-		
-		if((strcmp(choose,"-e") == 0))
-			Encrypt(&c,shifts[j]);
-		else
-			Decrypt(&c,shifts[j]);
 
-		text[i] = c;
-		if(isspace(c) != 0 || (ispunct(c)) != 0 || c == '\n')
-			/*when a space, punctuation character or new line is encountered skip
+		if(isalpha(text[i]) == 0){
+			/*if text[i] is not in the alphabet skip
 			  and decrease j since the shift it's not used*/
 			j--;
-		else if(j+1 == strlen(keyword))
+		}
+		else{
+			if((strcmp(choose,"-e") == 0))
+				Encrypt(&text[i],shifts[j]);
+			else
+				Decrypt(&text[i],shifts[j]);
+		}
+
+		/*the j index is resetted once every strlen(keyword)*/
+		if(j+1 == strlen(keyword)){
 			j=-1;
-		else
-			continue;
+		}
 	}
 
-	printf("%s\n",text);
-
-	return;
-}
-
-void WriteToFile(char *text, char *fileOut){
-
-	int fout;
-	/*open output file in write mode and if it doesn't exist it will be created.
-	   S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH are the write and read permissions */
-	mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
-	fout = open(fileOut,O_WRONLY | O_CREAT | O_TRUNC, mode);
-	if (fout == -1){
-		fprintf(stderr, "Error opening %s\n", fileOut);
-		exit(0);
-	}
-	
-	write(fout,text,strlen(text));
-
-	close(fout);
 	return;
 }
 
 char *OpenFromFile(char *fileIn){
-	
-	int i,fin;
+	FILE *fin = fopen(fileIn, "r");
 	char *text;
+
 	text = malloc(N * sizeof(char));
 
-	fin = open(fileIn,O_RDONLY);
-	if (fin == -1){
-		fprintf(stderr, "Error opening %s\n", fileIn);
-		exit(0);
-	}
-	/*read entire file and put it in text*/
-	read(fin,text,N);
-	
-	for(i=0;i<strlen(text);i++){
-		/*converts the whole string to lowercase*/
-		text[i] = tolower(text[i]);
+	if(fin == NULL){
+		fprintf(stderr, "Error, could not open file.\n");
+		exit(-1);
 	}
 
-	close(fin);
+	/*read entire file and put it in text*/
+	fread(text,N,1,fin);
+
+	fclose(fin);
 	return text;
+}
+
+void WriteToFile(char *text, char *fileOut){
+	FILE *fout = fopen(fileOut, "w");
+
+	if(fout == NULL){
+		fprintf(stderr, "Error, could not open file.\n");
+		exit(-1);
+	}
+
+	printf("%s\n", text);
+	fwrite(text,strlen(text),1,fout);
+
+	fclose(fout);
 }
 
 static void Usage(){
