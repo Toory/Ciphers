@@ -65,8 +65,7 @@ void Vigenere(char *text,char *keyword,char *choose){
 			j=-1;
 		}
 	}
-
-	return;
+	free(shifts);
 }
 
 char *OpenFromFile(char *fileIn){
@@ -103,7 +102,6 @@ void WriteToFile(char *text, char *fileOut){
 
 static void Usage(){
 	printf("Usage: vigenere <keyword> [-e | -d]  [-i] <input_file> [-o] <output_file>\n");
-	return;
 }
 
 int main(int argc, char **argv){
