@@ -13,7 +13,7 @@ void Encrypt(char *text,int shift){
 	int x;
 
 	*text = tolower(*text);
-	x = (*text - 'a' + shift) % 26;
+	x = (*text - 'a' + shift) % ALPHA;
 	if (x < 0)
 		x += ALPHA;
 	*text = alphabet[x];
@@ -23,7 +23,7 @@ void Decrypt(char *text,int shift){
 	int x;
 
 	*text = tolower(*text);
-	x = (*text - 'a' - shift) % 26;
+	x = (*text - 'a' - shift) % ALPHA;
 	if (x < 0)
 		x += ALPHA;
 	*text = alphabet[x];
@@ -33,7 +33,7 @@ void GetShifts(int *shift,char *keyword){
 	int i;
 
 	for(i=0;i<strlen(keyword);i++){
-		shift[i] = (keyword[i] - 'a') % 26;
+		shift[i] = (keyword[i] - 'a') % ALPHA;
 	}
 }
 
