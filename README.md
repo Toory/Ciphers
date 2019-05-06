@@ -11,7 +11,7 @@ The Caesar cipher, also known as a shift cipher, is one of the simplest forms of
   
   Write the text you want to encrypt/decrypt in a text file (in.dat)
   
-    git clone 'https://github.com/Toory/Ciphers'
+    git clone 'https://github.com/Toory/ciphers'
   	cd caesar-cipher
    	make
     ./caesar <shift> [-e | -d]  [-i] <input_file> [-o] <output_file>
